@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'calluna-sans';
+    src: url('./calluna-sans/CallunaSans-Regular.otf') format('truetype'),
+    url('./calluna-sans/CallunaSans-Bold.otf') format('truetype'),
+    url('./calluna-sans/CallunaSans-Italic.otf') format('truetype'),
+    url('./calluna-sans/CallunaSansBoldItalic.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'calluna-sans-bold';
+    src: url('./calluna-sans/CallunaSans-Bold.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*body{
+    font-family: 'calluna-sans', sans-serif;
+}*/
+
