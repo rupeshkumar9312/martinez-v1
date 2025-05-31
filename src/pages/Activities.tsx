@@ -43,7 +43,7 @@ const Activities = () => {
       name: 'Annual Sports Day',
       description: 'A grand celebration of athleticism with inter-house competitions and team spirit',
       date: 'December',
-      image: 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81c6?w=400&h=250&fit=crop',
+      image: 'https://t4.ftcdn.net/jpg/05/02/09/13/360_F_502091326_xIbctUR9TXGKLIKoD75CFvCf5Ve3vHYQ.jpg',
       color: 'border-primary'
     },
     {

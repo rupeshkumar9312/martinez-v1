@@ -3,6 +3,7 @@ import React from 'react';
 import { BookOpen, Users, Award, Calendar, Star, ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import schoolImg from '@/assets/images/school.jpg'
 
 const Home = () => {
   const features = [
@@ -91,7 +92,7 @@ const Home = () => {
             <div className="relative">
               <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
                 <img 
-                  src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop" 
+                  src={schoolImg}
                   alt="Students in classroom"
                   className="w-full h-80 object-cover rounded-2xl shadow-2xl"
                 />

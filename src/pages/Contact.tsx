@@ -55,7 +55,7 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Call Us",
-      details: ["Main: +91 98765 43210", "Admissions: +91 98765 43211"],
+      details: ["Main: +91 70170 44378", "Admissions: +91 63957 66173"],
       color: "text-secondary"
     },
     {
@@ -257,7 +257,7 @@ const Contact = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Phone className="w-6 h-6 text-yellow-300" />
-              <span className="text-xl font-primary-bold text-yellow-300">+91 98765 43211</span>
+              <span className="text-xl font-primary-bold text-yellow-300">+91 95365 37058</span>
             </div>
           </div>
         </section>

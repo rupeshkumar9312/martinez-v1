@@ -1,22 +1,23 @@
 import React from 'react';
-import { User, Users, Award, Shield } from 'lucide-react';
+import { User, Users, Award, Shield, Phone } from 'lucide-react';
 
 const committeeMembers = [
-    {
-        name: "Mr. Jogendra Singh",
-        role: "Founder & Chairperson",
-        image: "https://randomuser.me/api/portraits/men/4.jpg",
-        bio: "Visionary educator with 25+ years of experience, dedicated to holistic child development and academic excellence.",
-        icon: Award,
-        color: "text-primary"
-    },
+    // {
+    //     name: "Mr. Jogendra Singh",
+    //     role: "Founder & Chairperson",
+    //     image: "https://randomuser.me/api/portraits/men/4.jpg",
+    //     bio: "Visionary educator with 25+ years of experience, dedicated to holistic child development and academic excellence.",
+    //     icon: Award,
+    //     color: "text-primary"
+    // },
     {
         name: "Mr. Ramu Jadon",
         role: "Director (Academics)",
         image: "https://randomuser.me/api/portraits/men/43.jpg",
         bio: "Passionate about innovative learning, Rajeev brings a global perspective and a commitment to modern education.",
         icon: Users,
-        color: "text-secondary"
+        color: "text-secondary",
+        contact: "+91 7017044378"
     },
     {
         name: "Mr. Rupesh Kumar",
@@ -24,7 +25,8 @@ const committeeMembers = [
         image: "https://media.licdn.com/dms/image/v2/D5603AQHxQHhnwoz1kQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1710304751817?e=1753920000&v=beta&t=1hYWK-LYQnJjZVeqYwp1p9aXVCgMHEVHXFxmDrU_r34",
         bio: "Expert in curriculum design and teacher training, ensuring the highest academic standards at our school.",
         icon: Shield,
-        color: "text-text-brown"
+        color: "text-text-brown",
+        contact: "+91 8532077953"
     },
     {
         name: "Mr. Rinku Jadon",
@@ -32,7 +34,8 @@ const committeeMembers = [
         image: "https://randomuser.me/api/portraits/men/51.jpg",
         bio: "Oversees school operations, infrastructure, and safety, fostering a secure and nurturing environment.",
         icon: User,
-        color: "text-primary"
+        color: "text-primary",
+        contact: "+91 6395766173"
     },
     {
         name: "Mr. Sonu Jadon",
@@ -40,7 +43,8 @@ const committeeMembers = [
         image: "https://randomuser.me/api/portraits/men/72.jpg",
         bio: "Dynamic leader focused on student growth, teacher empowerment, and community engagement.",
         icon: Award,
-        color: "text-secondary"
+        color: "text-secondary",
+        contact: "+91 9536537058"
     }
 ];
 
@@ -72,7 +76,7 @@ const Management = () => {
                                 The Managing Committee brings together a wealth of experience, passion, and dedication to ensure the holistic growth and success of every student.
                             </p>
                         </div>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-12">
                             {committeeMembers.map((member, idx) => (
                                 <div
                                     key={idx}
@@ -84,13 +88,21 @@ const Management = () => {
                                             alt={member.name}
                                             className="w-28 h-28 object-cover rounded-full border-4 border-primary shadow"
                                         />
-                                        <div className={`absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow ${member.color}`}>
-                                            <member.icon className="w-6 h-6" />
+                                        <div
+                                            className={`absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow ${member.color}`}>
+                                            <member.icon className="w-6 h-6"/>
                                         </div>
                                     </div>
                                     <h3 className="text-2xl font-bold text-text-black mb-1">{member.name}</h3>
                                     <div className={`text-lg mb-3 font-semibold ${member.color}`}>{member.role}</div>
+                                    {member.contact && (
+                                        <p className="text-text-black/80 flex items-center font-semibold justify-center gap-2">
+                                            <Phone className="w-4 h-4 text-primary" />
+                                            {member.contact}
+                                        </p>
+                                    )}
                                     <p className="text-text-black/80">{member.bio}</p>
+
                                 </div>
                             ))}
                         </div>
