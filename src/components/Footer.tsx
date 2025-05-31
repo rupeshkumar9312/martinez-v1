@@ -22,10 +22,10 @@ const Footer = () => {
                 <Phone className="w-4 h-4" />
                 <span>+91 98765 43210</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4" />
-                <span>info@st.martinez.edu</span>
-              </div>
+              {/*<div className="flex items-center space-x-2">*/}
+              {/*  <Mail className="w-4 h-4" />*/}
+              {/*  <span>info@st.martinez.edu</span>*/}
+              {/*</div>*/}
               <div className="flex items-center space-x-2">
                 <MapPin className="w-4 h-4" />
                 <span>Near Bypass, Fatehabad Road
@@ -65,7 +65,7 @@ Shamsabad, Agra - 283125</span>
               <li>School Hours: 8:00 AM - 2:30 PM</li>
               <li>Office Hours: 8:00 AM - 4:00 PM</li>
               <li>Admission Open: January - March</li>
-              <li>Emergency Contact: +91 98765 43211</li>
+              <li>Emergency Contact: +91 95365 37058</li>
             </ul>
           </div>
         </div>

@@ -58,12 +58,12 @@ const Contact = () => {
       details: ["Main: +91 70170 44378", "Admissions: +91 63957 66173"],
       color: "text-secondary"
     },
-    {
-      icon: Mail,
-      title: "Email Us",
-      details: ["info@st.martinez.edu", "admissions@st.martinez.edu"],
-      color: "text-text-brown"
-    },
+    // {
+    //   icon: Mail,
+    //   title: "Email Us",
+    //   details: ["info@st.martinez.edu", "admissions@st.martinez.edu"],
+    //   color: "text-text-brown"
+    // },
     {
       icon: Clock,
       title: "Office Hours",
