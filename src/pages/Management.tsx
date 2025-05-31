@@ -94,7 +94,7 @@ const Management = () => {
                                         </div>
                                     </div>
                                     <h3 className="text-2xl font-bold text-text-black mb-1">{member.name}</h3>
-                                    <div className={`text-lg mb-3 font-semibold ${member.color}`}>{member.role}</div>
+                                    {/*<div className={`text-lg mb-3 font-semibold ${member.color}`}>{member.role}</div>*/}
                                     {member.contact && (
                                         <p className="text-text-black/80 flex items-center font-semibold justify-center gap-2">
                                             <Phone className="w-4 h-4 text-primary" />
