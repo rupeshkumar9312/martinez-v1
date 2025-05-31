@@ -14,7 +14,7 @@ const Navigation = () => {
     { name: 'Admissions', path: '/admissions' },
     { name: 'Activities', path: '/activities' },
     { name: 'Management', path: '/management' },
-    { name: 'Faculty Members', path: '/faculty-members' },
+    // { name: 'Faculty Members', path: '/faculty-members' },
     { name: 'Contact', path: '/contact' },
   ];
 
