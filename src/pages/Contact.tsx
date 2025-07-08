@@ -6,6 +6,9 @@ import { Label } from '@/components/ui/label';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const MAP_LAT = 27.0178; // Example: Shamsabad, Agra latitude
+const MAP_LNG = 78.1227; // Example: Shamsabad, Agra longitude
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -32,7 +35,7 @@ const Contact = () => {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: (
-            `Name=${formData.name}&Email=${formData.email}&Phone=${formData.phone}&Subject=${formData.subject}&Message=${formData.message}`
+            `Name=${formData.name}&Email=${formData.email}&Phone=${formData.phone}&Subject=${formData.subject}&Message=${formData.message}&query='General'`
         )
       });
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -50,7 +53,8 @@ const Contact = () => {
       icon: MapPin,
       title: "Visit Us",
       details: ["Near Bypass, Fatehabad Road Shamsabad, Agra - 283125"],
-      color: "text-primary"
+      color: "text-primary",
+      map: true
     },
     {
       icon: Phone,
@@ -116,8 +120,23 @@ const Contact = () => {
                           <p key={detailIndex} className="text-text-black/70 font-primary-regular">{detail}</p>
                       ))}
                     </div>
+                    {/*{info.map && (*/}
+                    {/*    <div className="mt-4 rounded-lg overflow-hidden shadow-lg">*/}
+                    {/*      <iframe*/}
+                    {/*          title="Our Location"*/}
+                    {/*          width="100%"*/}
+                    {/*          height="200"*/}
+                    {/*          frameBorder="0"*/}
+                    {/*          style={{ border: 0 }}*/}
+                    {/*          src={`https://www.google.com/maps?q=${MAP_LAT},${MAP_LNG}&z=16&output=embed`}*/}
+                    {/*          allowFullScreen*/}
+                    {/*      ></iframe>*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                   </div>
+
               ))}
+
             </div>
 
             {/* Main Contact Section */}

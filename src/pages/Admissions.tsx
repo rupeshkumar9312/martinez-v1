@@ -34,7 +34,7 @@ const Admissions = () => {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: (
-            `Name=${formData.studentName}&Parent=${formData.parentName}&Email=${formData.email}&Phone=${formData.phone}&Class=${formData.class}&PreviousSchool=${formData.previousSchool}`
+            `Name=${formData.studentName}&Parent=${formData.parentName}&Email=${formData.email}&Phone=${formData.phone}&Class=${formData.class}&PreviousSchool=${formData.previousSchool}&query='Admissions'`
         )
       });
       // setFormData({ studentName: '', parentName: '', email: '', phone: '', class: '', previousSchool: '' });

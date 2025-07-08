@@ -1,6 +1,8 @@
 import React from 'react';
 import { User, Users, Award, Shield, Phone } from 'lucide-react';
-
+import ramu from '../assets/images/ramu.jpeg'
+import rinku from '../assets/images/rinku.jpeg'
+import sonu from '../assets/images/sonu.jpeg'
 const committeeMembers = [
     // {
     //     name: "Mr. Jogendra Singh",
@@ -13,34 +15,35 @@ const committeeMembers = [
     {
         name: "Mr. Ramu Jadon",
         role: "Director (Academics)",
-        image: "https://randomuser.me/api/portraits/men/43.jpg",
-        bio: "Passionate about innovative learning, Rajeev brings a global perspective and a commitment to modern education.",
+        image: ramu,
+        bio: "Expert in curriculum design and teacher training, ensuring the highest academic standards at our school.",
         icon: Users,
         color: "text-secondary",
         contact: "+91 7017044378"
     },
     {
-        name: "Mr. Rupesh Kumar",
-        role: "Director (Administration)",
-        image: "https://media.licdn.com/dms/image/v2/D5603AQHxQHhnwoz1kQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1710304751817?e=1753920000&v=beta&t=1hYWK-LYQnJjZVeqYwp1p9aXVCgMHEVHXFxmDrU_r34",
-        bio: "Expert in curriculum design and teacher training, ensuring the highest academic standards at our school.",
-        icon: Shield,
-        color: "text-text-brown",
-        contact: "+91 8532077953"
-    },
-    {
         name: "Mr. Rinku Jadon",
         role: "Principal",
-        image: "https://randomuser.me/api/portraits/men/51.jpg",
+        image: rinku,
         bio: "Oversees school operations, infrastructure, and safety, fostering a secure and nurturing environment.",
         icon: User,
         color: "text-primary",
         contact: "+91 6395766173"
     },
+
+    {
+        name: "Mr. Rupesh Kumar",
+        role: "Director (Administration)",
+        image: "https://media.licdn.com/dms/image/v2/D5603AQHxQHhnwoz1kQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1710304751817?e=1753920000&v=beta&t=1hYWK-LYQnJjZVeqYwp1p9aXVCgMHEVHXFxmDrU_r34",
+        bio: "Passionate about innovative learning, Rupesh brings a global perspective and a commitment to modern education.",
+        icon: Shield,
+        color: "text-text-brown",
+        contact: "+91 8532077953"
+    },
     {
         name: "Mr. Sonu Jadon",
         role: "Co-ordinator",
-        image: "https://randomuser.me/api/portraits/men/72.jpg",
+        image: sonu,
         bio: "Dynamic leader focused on student growth, teacher empowerment, and community engagement.",
         icon: Award,
         color: "text-secondary",
