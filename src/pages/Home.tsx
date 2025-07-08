@@ -5,10 +5,46 @@ import { Link } from 'react-router-dom';
 import schoolImg from '@/assets/images/school.jpg'
 import AdmissionCloseSoonModal from '@/components/ui/AdmissionCloseSoonModal';
 
+// Replace with your actual Google Analytics Measurement ID
+const GA_MEASUREMENT_ID = 'G-JL2TLR32ZH';
+
+function initializeGA() {
+  if (typeof window === 'undefined') return;
+  if ((window as any).gaInitialized) return;
+
+  // Inject GA script
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+
+  // Initialize gtag
+  (window as any).dataLayer = (window as any).dataLayer || [];
+  function gtag(...args: any[]) {
+    (window as any).dataLayer.push(args);
+  }
+  (window as any).gtag = gtag;
+
+  gtag('js', new Date());
+  gtag('config', GA_MEASUREMENT_ID);
+
+  (window as any).gaInitialized = true;
+}
+
 const Home = () => {
   const [showAdmissionModal, setShowAdmissionModal] = useState(false);
 
   useEffect(() => {
+    // Google Analytics initialization and pageview
+    initializeGA();
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'page_view', {
+        page_title: document.title,
+        page_location: window.location.href,
+        page_path: window.location.pathname,
+      });
+    }
+
     // Show the modal after a short delay (e.g., 1 second)
     const timer = setTimeout(() => setShowAdmissionModal(true), 1000);
     return () => clearTimeout(timer);
