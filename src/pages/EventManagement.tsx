@@ -255,19 +255,79 @@ const EventManagement = () => {
   const onSubmit = async (data: EventForm) => {
     setIsLoading(true);
     try {
-      // In a real app, this would be an API call to save the event
-      console.log("Saving event:", data);
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        toast({
+          title: "Authentication Error",
+          description: "No access token found. Please log in again.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-      toast({
-        title: isEditing
-          ? "Event updated successfully"
-          : "Event created successfully",
-        description: `${data.name} has been ${isEditing ? "updated" : "created"}.`,
+      const requestData = {
+        name: data.name,
+        slug: data.slug,
+        description: data.description,
+        date: data.date,
+        image: data.image,
+        color: data.color,
+        fullDescription: data.fullDescription,
+        schedule: data.schedule,
+        images: data.additionalImages || [],
+        activities: JSON.stringify(data.activities),
+        highlights: JSON.stringify(data.highlights),
+      };
+
+      const response = await fetch("/api/events", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
       });
 
-      // Navigate back to dashboard
-      navigate("/admin/dashboard");
+      if (response.status === 201) {
+        const result = await response.json();
+        toast({
+          title: isEditing
+            ? "Event updated successfully"
+            : "Event created successfully",
+          description: `${data.name} has been ${isEditing ? "updated" : "created"}.`,
+        });
+        navigate("/admin/dashboard");
+      } else if (response.status === 400) {
+        const errorData = await response.json();
+        if (errorData.error === "DUPLICATE_SLUG") {
+          toast({
+            title: "Duplicate Event Slug",
+            description: errorData.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error saving event",
+            description:
+              errorData.message || "An error occurred while saving the event.",
+            variant: "destructive",
+          });
+        }
+      } else if (response.status === 403) {
+        toast({
+          title: "Unauthorized",
+          description: "You do not have permission to perform this action.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error saving event",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
+      console.error("Error saving event:", error);
       toast({
         title: "Error saving event",
         description:

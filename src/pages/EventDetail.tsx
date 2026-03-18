@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -14,10 +14,50 @@ import {
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const EventDetail = () => {
-  const { eventName } = useParams<{ eventName: string }>();
+  const { eventId } = useParams<{ eventId: string }>();
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchEventDetail = async () => {
+      try {
+        const response = await fetch(`/api/events/${eventId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch event details");
+        }
+        const data = await response.json();
+
+        // Parse activities and highlights if they are JSON strings
+        const parsedEvent = {
+          ...data,
+          activities:
+            typeof data.activities === "string"
+              ? JSON.parse(data.activities)
+              : data.activities || [],
+          highlights:
+            typeof data.highlights === "string"
+              ? JSON.parse(data.highlights)
+              : data.highlights || [],
+          images: data.images || [data.image],
+          schedule: data.schedule || [],
+        };
+
+        setEvent(parsedEvent);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (eventId) {
+      fetchEventDetail();
+    }
+  }, [eventId]);
 
   // Event data - in a real app, this would come from an API or shared data store
-  const events = [
+  const fallbackEvents = [
     {
       name: "Annual Sports Day",
       slug: "annual-sports-day",
@@ -176,20 +216,28 @@ const EventDetail = () => {
     },
   ];
 
-  const event = events.find((e) => e.slug === eventName);
-
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  if (!event) {
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-text-black/70">Loading event details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !event) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-primary-bold text-text-black mb-4">
-            Event Not Found
+            {error ? "Error Loading Event" : "Event Not Found"}
           </h1>
           <p className="text-text-black/70 mb-6">
-            The event you're looking for doesn't exist.
+            {error || "The event you're looking for doesn't exist."}
           </p>
           <Link
             to="/activities"

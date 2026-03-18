@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Music,
   Palette,
@@ -12,6 +12,10 @@ import {
 import { Link } from "react-router-dom";
 
 const Activities = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const activities = [
     {
       category: "Sports & Athletics",
@@ -84,48 +88,24 @@ const Activities = () => {
     },
   ];
 
-  const events = [
-    {
-      name: "Annual Sports Day",
-      slug: "annual-sports-day",
-      description:
-        "A grand celebration of athleticism with inter-house competitions and team spirit",
-      date: "December",
-      image:
-        "https://t4.ftcdn.net/jpg/05/02/09/13/360_F_502091326_xIbctUR9TXGKLIKoD75CFvCf5Ve3vHYQ.jpg",
-      color: "border-primary",
-    },
-    {
-      name: "Cultural Festival",
-      slug: "cultural-festival",
-      description:
-        "Showcasing student talents in music, dance, drama, and various cultural performances",
-      date: "February",
-      image:
-        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop",
-      color: "border-secondary",
-    },
-    {
-      name: "Science Exhibition",
-      slug: "science-exhibition",
-      description:
-        "Students display innovative science projects and experiments to inspire scientific thinking",
-      date: "March",
-      image:
-        "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&h=250&fit=crop",
-      color: "border-text-brown",
-    },
-    {
-      name: "Art Exhibition",
-      slug: "art-exhibition",
-      description:
-        "Display of student artwork showcasing creativity and artistic development throughout the year",
-      date: "April",
-      image:
-        "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400&h=250&fit=crop",
-      color: "border-primary",
-    },
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("/api/events");
+        if (!response.ok) {
+          throw new Error("Failed to fetch events");
+        }
+        const data = await response.json();
+        setEvents(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const clubs = [
     {
@@ -265,32 +245,42 @@ const Activities = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {events.map((event, index) => (
-              <Link
-                key={index}
-                to={`/activities/${event.slug}`}
-                className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${event.color} block`}
-              >
-                <img
-                  src={event.image}
-                  alt={event.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-primary-bold text-text-black">
-                      {event.name}
-                    </h3>
-                    <span className="bg-gray-100 text-text-black px-3 py-1 rounded-full text-sm font-primary-bold">
-                      {event.date}
-                    </span>
+            {loading ? (
+              <div className="col-span-2 text-center py-8">
+                <p className="text-text-black/70">Loading events...</p>
+              </div>
+            ) : error ? (
+              <div className="col-span-2 text-center py-8">
+                <p className="text-red-600">Error loading events: {error}</p>
+              </div>
+            ) : (
+              events.map((event) => (
+                <Link
+                  key={event.id}
+                  to={`/activities/${event.id}`}
+                  className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${event.color} block`}
+                >
+                  <img
+                    src={event.image}
+                    alt={event.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-2xl font-primary-bold text-text-black">
+                        {event.name}
+                      </h3>
+                      <span className="bg-gray-100 text-text-black px-3 py-1 rounded-full text-sm font-primary-bold">
+                        {event.date}
+                      </span>
+                    </div>
+                    <p className="text-text-black/70 font-primary-regular leading-relaxed">
+                      {event.description}
+                    </p>
                   </div>
-                  <p className="text-text-black/70 font-primary-regular leading-relaxed">
-                    {event.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </section>
