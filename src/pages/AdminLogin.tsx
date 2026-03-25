@@ -105,7 +105,6 @@ const AdminLogin = () => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@stmartinez.com"
                     className="pl-10 font-primary-regular"
                     {...register("email")}
                   />

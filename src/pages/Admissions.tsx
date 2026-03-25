@@ -31,20 +31,17 @@ const Admissions = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch(
-        API_ENDPOINTS.QUERIES,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            studentName: formData.studentName,
-            parentGuardianName: formData.parentName,
-            email: formData.email,
-            phoneNumber: formData.phone,
-            applyingForClass: formData.class,
-          }),
-        },
-      );
+      const response = await fetch(API_ENDPOINTS.QUERIES, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentName: formData.studentName,
+          parentGuardianName: formData.parentName,
+          email: formData.email,
+          phoneNumber: formData.phone,
+          applyingForClass: formData.class,
+        }),
+      });
 
       if (response.status === 201) {
         setFormData({
