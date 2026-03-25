@@ -22,7 +22,7 @@ const EventDetail = () => {
   useEffect(() => {
     const fetchEventDetail = async () => {
       try {
-        const response = await fetch(`/api/events/${eventId}`);
+        const response = await fetch(`https://st-martinez-api.onrender.com/events/${eventId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch event details");
         }
