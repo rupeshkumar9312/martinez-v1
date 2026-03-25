@@ -37,6 +37,7 @@ import { Badge } from "@/components/ui/badge";
 import ImageUpload from "../components/ImageUpload";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "../contexts/AuthContext";
+import { API_ENDPOINTS } from "../config/api";
 
 const eventSchema = z.object({
   name: z.string().min(1, "Event name is required"),
@@ -280,7 +281,7 @@ const EventManagement = () => {
         highlights: JSON.stringify(data.highlights),
       };
 
-      const response = await fetch("/api/events", {
+      const response = await fetch(API_ENDPOINTS.EVENTS, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -302,7 +303,7 @@ const EventManagement = () => {
             formData.append("file", mainImageFile);
 
             const imageResponse = await fetch(
-              `/api/events/${eventId}/upload-cover-image`,
+              API_ENDPOINTS.UPLOAD_COVER_IMAGE(eventId),
               {
                 method: "POST",
                 headers: {
@@ -333,7 +334,7 @@ const EventManagement = () => {
             });
 
             const imageResponse = await fetch(
-              `/api/events/${eventId}/upload-image`,
+              API_ENDPOINTS.UPLOAD_EVENT_IMAGES(eventId),
               {
                 method: "POST",
                 headers: {
@@ -389,14 +390,17 @@ const EventManagement = () => {
             updateData.images = additionalImageUrls;
           }
 
-          const updateResponse = await fetch(`/api/events/${eventId}`, {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
+          const updateResponse = await fetch(
+            API_ENDPOINTS.EVENT_BY_ID(eventId),
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updateData),
             },
-            body: JSON.stringify(updateData),
-          });
+          );
 
           if (updateResponse.status !== 200) {
             console.warn("Event update with image URLs failed");

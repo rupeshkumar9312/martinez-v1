@@ -10,6 +10,7 @@ import {
   Award,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { API_ENDPOINTS } from "../config/api";
 
 const Activities = () => {
   const [events, setEvents] = useState([]);
@@ -91,7 +92,7 @@ const Activities = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("/api/events");
+        const response = await fetch(API_ENDPOINTS.EVENTS);
         if (!response.ok) {
           throw new Error("Failed to fetch events");
         }
