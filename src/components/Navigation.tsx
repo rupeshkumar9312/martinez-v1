@@ -1,21 +1,20 @@
-
-import React, { useState } from 'react';
-import { Menu, X, School } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import { Menu, X, School } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Academics', path: '/academics' },
-    { name: 'Admissions', path: '/admissions' },
-    { name: 'Activities', path: '/activities' },
-    { name: 'Management', path: '/management' },
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Academics", path: "/academics" },
+    { name: "Admissions", path: "/admissions" },
+    { name: "Activities", path: "/activities" },
+    { name: "Management", path: "/management" },
     // { name: 'Faculty Members', path: '/faculty-members' },
-    { name: 'Contact', path: '/contact' },
+    { name: "Contact", path: "/contact" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -27,17 +26,19 @@ const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <School className="w-8 h-8" />
-            <span className="text-xl font-primary-bold">St. Martinez International School</span>
+            <span className="text-xl font-primary-bold">
+              St. Martinez International School
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
                 className={`hover:text-yellow-300 transition-colors font-primary-regular ${
-                  isActive(item.path) ? 'text-yellow-300 font-primary-bold' : ''
+                  isActive(item.path) ? "text-yellow-300 font-primary-bold" : ""
                 }`}
               >
                 {item.name}
@@ -46,10 +47,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile menu button */}
-          <button
-            className="md:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-          >
+          <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
@@ -62,13 +60,20 @@ const Navigation = () => {
                 key={item.name}
                 to={item.path}
                 className={`block py-2 hover:text-yellow-300 transition-colors font-primary-regular ${
-                  isActive(item.path) ? 'text-yellow-300 font-primary-bold' : ''
+                  isActive(item.path) ? "text-yellow-300 font-primary-bold" : ""
                 }`}
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
               </Link>
             ))}
+            <Link
+              to="/admin/login"
+              className="block py-2 bg-yellow-500 hover:bg-yellow-600 text-primary px-4 rounded font-primary-bold transition-colors mt-2"
+              onClick={() => setIsOpen(false)}
+            >
+              Admin Login
+            </Link>
           </div>
         )}
       </div>
