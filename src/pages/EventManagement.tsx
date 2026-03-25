@@ -72,6 +72,7 @@ const EventManagement = () => {
   const { user } = useAuth();
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [mainImageFile, setMainImageFile] = useState<File | null>(null);
 
   const colorOptions = [
     {
@@ -270,7 +271,7 @@ const EventManagement = () => {
         slug: data.slug,
         description: data.description,
         date: data.date,
-        image: data.image,
+        image: null, // Image will be uploaded separately
         color: data.color,
         fullDescription: data.fullDescription,
         schedule: data.schedule,
@@ -290,6 +291,40 @@ const EventManagement = () => {
 
       if (response.status === 201) {
         const result = await response.json();
+
+        // Upload main image if a file was selected
+        if (mainImageFile) {
+          try {
+            const formData = new FormData();
+            formData.append("file", mainImageFile);
+
+            const imageResponse = await fetch(
+              `/api/events/${result.id}/upload-cover-image`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+              },
+            );
+
+            if (imageResponse.status !== 201) {
+              console.warn(
+                "Image upload failed, but event was created successfully",
+              );
+            }
+          } catch (imageError) {
+            console.error("Error uploading image:", imageError);
+            toast({
+              title: "Warning",
+              description:
+                "Event created, but image upload failed. You can upload the image manually.",
+              variant: "default",
+            });
+          }
+        }
+
         toast({
           title: isEditing
             ? "Event updated successfully"
@@ -500,12 +535,75 @@ const EventManagement = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="image">Main Image URL *</Label>
-                <Input
-                  id="image"
-                  {...register("image")}
-                  placeholder="https://example.com/image.jpg"
-                />
+                <Label htmlFor="image">Main Image *</Label>
+                <div className="space-y-4">
+                  {watch("image") && (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden border">
+                      <img
+                        src={watch("image")}
+                        alt="Main Event"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setValue("image", "");
+                          setMainImageFile(null);
+                        }}
+                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                  <div>
+                    <input
+                      ref={(input) => {
+                        if (input) {
+                          const handleMainImageSelect = (e: Event) => {
+                            const target = e.target as HTMLInputElement;
+                            const files = target.files;
+                            if (!files) return;
+
+                            const file = files[0];
+                            if (file && file.type.startsWith("image/")) {
+                              setMainImageFile(file);
+                              const reader = new FileReader();
+                              reader.onload = (event) => {
+                                const result = event.target?.result as string;
+                                if (result) {
+                                  setValue("image", result);
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          };
+                          input.addEventListener(
+                            "change",
+                            handleMainImageSelect,
+                          );
+                        }
+                      }}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="mainImageInput"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        document.getElementById("mainImageInput")?.click()
+                      }
+                      className="w-full"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      {watch("image")
+                        ? "Change Main Image"
+                        : "Select Main Image"}
+                    </Button>
+                  </div>
+                </div>
                 {errors.image && (
                   <p className="text-sm text-red-600 mt-1">
                     {errors.image.message}
