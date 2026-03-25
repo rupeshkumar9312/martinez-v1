@@ -92,7 +92,7 @@ const Activities = () => {
     const fetchEvents = async () => {
       try {
         const response = await fetch(
-          "https://st-martinez-api.onrender.com/events",
+          "/api/events",
         );
         if (!response.ok) {
           throw new Error("Failed to fetch events");
