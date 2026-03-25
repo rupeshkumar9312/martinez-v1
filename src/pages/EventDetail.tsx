@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { API_ENDPOINTS } from "../config/api";
 
 const EventDetail = () => {
   const { eventId } = useParams<{ eventId: string }>();
@@ -22,7 +23,7 @@ const EventDetail = () => {
   useEffect(() => {
     const fetchEventDetail = async () => {
       try {
-        const response = await fetch(`/api/events/${eventId}`);
+        const response = await fetch(API_ENDPOINTS.EVENT_BY_ID(eventId));
         if (!response.ok) {
           throw new Error("Failed to fetch event details");
         }
