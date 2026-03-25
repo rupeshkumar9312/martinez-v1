@@ -44,6 +44,12 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
+            <Link
+              to="/admin/login"
+              className="bg-yellow-500 hover:bg-yellow-600 text-primary px-4 py-2 rounded font-primary-bold transition-colors"
+            >
+              Admin
+            </Link>
           </div>
 
           {/* Mobile menu button */}
