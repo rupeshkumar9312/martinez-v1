@@ -178,6 +178,58 @@ const Activities = () => {
         </div>
       </section>
 
+{/* Annual Events */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-primary-bold text-text-black mb-6">
+              Annual Events
+            </h2>
+            <p className="text-xl text-text-black/70 font-primary-regular max-w-3xl mx-auto">
+              Memorable celebrations that bring our school community together
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {loading ? (
+              <div className="col-span-2 text-center py-8">
+                <p className="text-text-black/70">Loading events...</p>
+              </div>
+            ) : error ? (
+              <div className="col-span-2 text-center py-8">
+                <p className="text-red-600">Error loading events: {error}</p>
+              </div>
+            ) : (
+              events.map((event) => (
+                <Link
+                  key={event.id}
+                  to={`/activities/${event.id}`}
+                  className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${event.color} block`}
+                >
+                  <img
+                    src={event.image}
+                    alt={event.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-2xl font-primary-bold text-text-black">
+                        {event.name}
+                      </h3>
+                      <span className="bg-gray-100 text-text-black px-3 py-1 rounded-full text-sm font-primary-bold">
+                        {event.date}
+                      </span>
+                    </div>
+                    <p className="text-text-black/70 font-primary-regular leading-relaxed">
+                      {event.description}
+                    </p>
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
       {/* Extracurricular Activities */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-6">
@@ -233,58 +285,7 @@ const Activities = () => {
         </div>
       </section>
 
-      {/* Annual Events */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-primary-bold text-text-black mb-6">
-              Annual Events
-            </h2>
-            <p className="text-xl text-text-black/70 font-primary-regular max-w-3xl mx-auto">
-              Memorable celebrations that bring our school community together
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {loading ? (
-              <div className="col-span-2 text-center py-8">
-                <p className="text-text-black/70">Loading events...</p>
-              </div>
-            ) : error ? (
-              <div className="col-span-2 text-center py-8">
-                <p className="text-red-600">Error loading events: {error}</p>
-              </div>
-            ) : (
-              events.map((event) => (
-                <Link
-                  key={event.id}
-                  to={`/activities/${event.id}`}
-                  className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${event.color} block`}
-                >
-                  <img
-                    src={event.image}
-                    alt={event.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-8">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-2xl font-primary-bold text-text-black">
-                        {event.name}
-                      </h3>
-                      <span className="bg-gray-100 text-text-black px-3 py-1 rounded-full text-sm font-primary-bold">
-                        {event.date}
-                      </span>
-                    </div>
-                    <p className="text-text-black/70 font-primary-regular leading-relaxed">
-                      {event.description}
-                    </p>
-                  </div>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Clubs & Societies */}
       <section className="py-20 bg-white">
