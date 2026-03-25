@@ -157,16 +157,6 @@ const AdminLogin = () => {
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
-
-            <Alert className="mt-6">
-              <AlertDescription className="text-sm font-primary-regular">
-                <strong>Demo Credentials:</strong>
-                <br />
-                Email: admin@stmartinez.com
-                <br />
-                Password: admin123
-              </AlertDescription>
-            </Alert>
           </CardContent>
         </Card>
       </div>

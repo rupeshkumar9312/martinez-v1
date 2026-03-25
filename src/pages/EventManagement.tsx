@@ -71,6 +71,7 @@ const EventManagement = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [additionalImageFiles, setAdditionalImageFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
 
@@ -266,16 +267,15 @@ const EventManagement = () => {
         return;
       }
 
+      // Step 1: Create event without image and images URLs
       const requestData = {
         name: data.name,
         slug: data.slug,
         description: data.description,
         date: data.date,
-        image: null, // Image will be uploaded separately
         color: data.color,
         fullDescription: data.fullDescription,
         schedule: data.schedule,
-        images: data.additionalImages || [],
         activities: JSON.stringify(data.activities),
         highlights: JSON.stringify(data.highlights),
       };
@@ -291,15 +291,18 @@ const EventManagement = () => {
 
       if (response.status === 201) {
         const result = await response.json();
+        const eventId = result.id;
+        let mainImageUrl: string | null = null;
+        const additionalImageUrls: string[] = [];
 
-        // Upload main image if a file was selected
+        // Step 2: Upload main image if a file was selected
         if (mainImageFile) {
           try {
             const formData = new FormData();
             formData.append("file", mainImageFile);
 
             const imageResponse = await fetch(
-              `/api/events/${result.id}/upload-cover-image`,
+              `/api/events/${eventId}/upload-cover-image`,
               {
                 method: "POST",
                 headers: {
@@ -309,19 +312,94 @@ const EventManagement = () => {
               },
             );
 
-            if (imageResponse.status !== 201) {
-              console.warn(
-                "Image upload failed, but event was created successfully",
-              );
+            if (imageResponse.status === 201) {
+              const imageResult = await imageResponse.json();
+              mainImageUrl = imageResult.imageUrl;
+            } else {
+              console.warn("Main image upload failed");
             }
           } catch (imageError) {
-            console.error("Error uploading image:", imageError);
-            toast({
-              title: "Warning",
-              description:
-                "Event created, but image upload failed. You can upload the image manually.",
-              variant: "default",
+            console.error("Error uploading main image:", imageError);
+          }
+        }
+
+        // Step 3: Upload additional images if they exist (batch upload)
+        if (additionalImageFiles && additionalImageFiles.length > 0) {
+          try {
+            const formData = new FormData();
+            // Append all files with the "files" field name for batch upload
+            additionalImageFiles.forEach((file) => {
+              formData.append("files", file);
             });
+
+            const imageResponse = await fetch(
+              `/api/events/${eventId}/upload-image`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+              },
+            );
+
+            if (imageResponse.status === 201) {
+              const imageResults = await imageResponse.json();
+              // imageResults is an array of objects with imageUrl
+              if (Array.isArray(imageResults)) {
+                imageResults.forEach((result) => {
+                  additionalImageUrls.push(result.imageUrl);
+                });
+              }
+            } else {
+              console.warn("Additional images upload failed");
+            }
+          } catch (imageError) {
+            console.error("Error uploading additional images:", imageError);
+          }
+        } else if (
+          data.additionalImages &&
+          data.additionalImages.length > 0 &&
+          typeof data.additionalImages[0] === "string" &&
+          data.additionalImages[0].startsWith("http")
+        ) {
+          // Images are already URLs (from editing), keep them as is
+          additionalImageUrls.push(...data.additionalImages);
+        }
+
+        // Step 4: Update event with image URLs if we have them
+        if (mainImageUrl || additionalImageUrls.length > 0) {
+          const updateData: any = {
+            name: data.name,
+            slug: data.slug,
+            description: data.description,
+            date: data.date,
+            color: data.color,
+            fullDescription: data.fullDescription,
+            schedule: data.schedule,
+            activities: JSON.stringify(data.activities),
+            highlights: JSON.stringify(data.highlights),
+          };
+
+          if (mainImageUrl) {
+            updateData.image = mainImageUrl;
+          }
+
+          if (additionalImageUrls.length > 0) {
+            updateData.images = additionalImageUrls;
+          }
+
+          const updateResponse = await fetch(`/api/events/${eventId}`, {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updateData),
+          });
+
+          if (updateResponse.status !== 200) {
+            console.warn("Event update with image URLs failed");
           }
         }
 
@@ -617,7 +695,9 @@ const EventManagement = () => {
                   onImagesChange={(images) =>
                     setValue("additionalImages", images)
                   }
+                  onFilesChange={(files) => setAdditionalImageFiles(files)}
                   maxImages={10}
+                  initialImages={watch("additionalImages") || []}
                 />
               </div>
             </CardContent>

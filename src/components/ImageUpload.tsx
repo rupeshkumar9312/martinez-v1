@@ -4,28 +4,43 @@ import { Button } from "@/components/ui/button";
 
 interface ImageUploadProps {
   onImagesChange: (images: string[]) => void;
+  onFilesChange?: (files: File[]) => void;
   maxImages?: number;
   className?: string;
+  initialImages?: string[];
+}
+
+interface ImageData {
+  url: string;
+  file?: File;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onImagesChange,
+  onFilesChange,
   maxImages = 10,
   className = "",
+  initialImages = [],
 }) => {
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<ImageData[]>(
+    initialImages.map((url) => ({ url })),
+  );
+  const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
 
-    const newImages: string[] = [];
+    setIsProcessing(true);
     const fileArray = Array.from(files);
 
     // Limit the number of images
     const availableSlots = maxImages - uploadedImages.length;
     const filesToProcess = fileArray.slice(0, availableSlots);
+
+    let processedCount = 0;
+    const newImagesList: ImageData[] = [];
 
     filesToProcess.forEach((file) => {
       if (file.type.startsWith("image/")) {
@@ -33,12 +48,37 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         reader.onload = (e) => {
           const result = e.target?.result as string;
           if (result) {
-            const updatedImages = [...uploadedImages, result];
+            newImagesList.push({ url: result, file });
+          }
+          processedCount++;
+
+          // Update state once all files are processed
+          if (processedCount === filesToProcess.length) {
+            const updatedImages = [...uploadedImages, ...newImagesList];
             setUploadedImages(updatedImages);
-            onImagesChange(updatedImages);
+            onImagesChange(updatedImages.map((img) => img.url));
+            if (onFilesChange) {
+              onFilesChange(
+                updatedImages.filter((img) => img.file).map((img) => img.file!),
+              );
+            }
+            setIsProcessing(false);
           }
         };
         reader.readAsDataURL(file);
+      } else {
+        processedCount++;
+        if (processedCount === filesToProcess.length) {
+          const updatedImages = [...uploadedImages, ...newImagesList];
+          setUploadedImages(updatedImages);
+          onImagesChange(updatedImages.map((img) => img.url));
+          if (onFilesChange) {
+            onFilesChange(
+              updatedImages.filter((img) => img.file).map((img) => img.file!),
+            );
+          }
+          setIsProcessing(false);
+        }
       }
     });
 
@@ -51,7 +91,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const removeImage = (index: number) => {
     const updatedImages = uploadedImages.filter((_, i) => i !== index);
     setUploadedImages(updatedImages);
-    onImagesChange(updatedImages);
+    onImagesChange(updatedImages.map((img) => img.url));
+    if (onFilesChange) {
+      onFilesChange(
+        updatedImages.filter((img) => img.file).map((img) => img.file!),
+      );
+    }
   };
 
   const handleUploadClick = () => {
@@ -74,15 +119,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           type="button"
           variant="outline"
           onClick={handleUploadClick}
-          disabled={uploadedImages.length >= maxImages}
+          disabled={uploadedImages.length >= maxImages || isProcessing}
           className="w-full h-24 border-2 border-dashed border-gray-300 hover:border-gray-400 transition-colors"
         >
           <div className="flex flex-col items-center">
             <Upload className="w-6 h-6 text-gray-400 mb-2" />
             <span className="text-sm text-gray-600">
-              {uploadedImages.length >= maxImages
-                ? `Maximum ${maxImages} images reached`
-                : "Click to upload images"}
+              {isProcessing
+                ? "Processing images..."
+                : uploadedImages.length >= maxImages
+                  ? `Maximum ${maxImages} images reached`
+                  : "Click to upload images"}
             </span>
             <span className="text-xs text-gray-500 mt-1">
               PNG, JPG, GIF up to 10MB each
@@ -94,11 +141,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       {/* Image Preview Grid */}
       {uploadedImages.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {uploadedImages.map((image, index) => (
+          {uploadedImages.map((imageData, index) => (
             <div key={index} className="relative group">
               <div className="aspect-square rounded-lg overflow-hidden border">
                 <img
-                  src={image}
+                  src={imageData.url}
                   alt={`Upload ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
